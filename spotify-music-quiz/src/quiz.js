@@ -256,6 +256,39 @@ export const data = `[{
 		"is_playable": true,
 		"name": "That's Amore",
 		"path": "C:/Users/18607/Github/spotify-music-quiz/Downloads/ThatsAmore.mp3"
+	},
+    "TheWayIAre": {
+		"album": {
+			"id": "2up3OPMp9Tb4dAKM2erWXQ",
+			"images": [{
+				"url": "https://upload.wikimedia.org/wikipedia/en/e/e1/Eyetothetelescope.jpg",
+				"height": 300,
+				"width": 300
+			}],
+			"name": "Shock Value",
+			"release_date": "2007-06",
+			"uri": "spotify:album:2up3OPMp9Tb4dAKM2erWXQ"
+		},
+		"artists": [{
+			"genres": [
+				"R&B"
+			],
+			"id": "string",
+			"name": "Timbaland",
+			"type": "artist"
+		},
+        {
+			"genres": [
+				"R&B"
+			],
+			"id": "string",
+			"name": "Keri Hilson",
+			"type": "artist"
+		}],
+		"id": "string",
+		"is_playable": true,
+		"name": "The Way I are",
+		"path": "C:/Users/18607/Github/spotify-music-quiz/Downloads/TheWayIAre.mp3"
 	}
 }]`;
 

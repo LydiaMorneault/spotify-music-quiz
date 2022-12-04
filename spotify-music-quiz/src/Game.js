@@ -12,15 +12,20 @@ export class Question extends React.Component {
         this.question = "blank";
     }
 
+    getRandomSong() {
+        var rankey = this.songkeys[Math.floor(Math.random() * this.songkeys.length)];
+        console.log(this.data[rankey]);
+        return this.data[rankey];
+    }
+
     generateAnswers(type) {
         let ansType = type;
 
         // get random questions, making sure that there are no repeats and the options are discrete
         
-        this.data = JSON.parse(data);
-        this.songkeys = Object.keys(this.data[0]);
-        var rankey = this.songkeys[Math.floor(Math.random() * this.songkeys.length)]
-        this.question = this.songkeys[rankey];
+
+        let answer = this.getRandomSong();
+
 
 
         switch(ansType) {
@@ -30,7 +35,7 @@ export class Question extends React.Component {
 
 
 
-        // return options;
+        return answer;
     }
 
 
@@ -46,7 +51,7 @@ export class Question extends React.Component {
 
         return (
             <div>
-                <h1>{this.songkeys[0]}</h1>
+                <h1>{options}</h1>
                 <button>Option 1</button>
             </div>
         );
