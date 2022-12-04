@@ -1,0 +1,9 @@
+{
+    "1": {
+        "query": "What album does this song appear on?",
+        "display": "song",
+        "answerType": "album",
+        "displayImage": "False",
+        "playAudio": "True"
+    }
+}

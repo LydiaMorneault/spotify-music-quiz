@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Game } from './Game';
 // import './App.css';
 
 
@@ -24,9 +25,9 @@ class App extends Component {
     return (
       <div className='App'>
         <header className='App-header'>
-          <h1>Log In</h1>
+          <h1>I'll Be Home for Quiz Mice</h1>
         </header>
-        <p className='App-intro'>{this.state.apiResponse}</p>
+        <Game />
       </div>
     );
   }
