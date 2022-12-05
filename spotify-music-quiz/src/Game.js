@@ -1,5 +1,11 @@
 import React, { Component } from 'react';
 import { data, questions } from './quiz';
+import {
+    BrowserRouter as Router,
+    Switch,
+    Route,
+    Redirect,
+  } from "react-router-dom";
 
 export class Question extends React.Component {
     constructor(props) {
@@ -13,15 +19,16 @@ export class Question extends React.Component {
     }
 
     state = {
-        idx: 0,
+        idx: 1,
         question: "blank",
         answerLabel: "",
         answerTrack: "",
         options: [],
-        points: 0
+        points: 0,
+        currentQ: null
     }
 
-    shuffle(array) {
+    shuffle(array) { // source: https://stackoverflow.com/questions/2450954/how-to-randomize-shuffle-a-javascript-array
         let currentIndex = array.length,  randomIndex;
       
         // While there remain elements to shuffle.
@@ -39,11 +46,13 @@ export class Question extends React.Component {
         return array;
     }
 
+
     getRandomSong() {
         var idx = Math.floor(Math.random() * this.songkeys.length);
         var rankey = this.songkeys[idx];
         return this.data[0][rankey];
     }
+
 
     generateAnswers(type) {
         let ansType = type;
@@ -56,12 +65,14 @@ export class Question extends React.Component {
         let answers = [];
         let numSongs = 0;
 
+        // get value based on what's needed for the question
         switch(ansType) {
             case "album":
                 answers.push(answer.album.name);
                 this.answer = answer.album.name;
         }
 
+        // gets 4 total options for answers
         while (numSongs < 4) {
             var song = this.getRandomSong();
             let checkAns;
@@ -71,6 +82,7 @@ export class Question extends React.Component {
                     checkAns = song.album.name;
             }
 
+            // make sure there are no duplicates
             if (!songs.includes(song) && !answers.includes(checkAns)) {
                 songs.push(song.album.name);
                 answers.push(checkAns);
@@ -80,6 +92,7 @@ export class Question extends React.Component {
 
         this.setState({answerLabel: answer.name, options: this.shuffle(songs)});
     }
+
 
     handleClick(idx) {
         console.log(idx, this.state.options[idx], this.answer);
@@ -93,28 +106,57 @@ export class Question extends React.Component {
             currPts = this.state.points - 10;     
             // TODO: make womp womp
         }
-        this.setState({points: currPts});
+
+        // if there are no more questions, end game
+        if (this.state.idx < this.keys.length) {
+            this.setState({
+                points: currPts,
+                idx: this.state.idx + 1,
+                question: "blank",
+                answerLabel: "",
+                answerTrack: "",
+                options: [],
+                currentQ: this.q[0][`${this.state.idx + 1}`]
+            });
+            this.generateAnswers("album");
+        } else {
+            this.setState({
+                points: currPts,
+                idx: this.state.idx + 1,
+                question: "Game Over",
+                answerLabel: "",
+                answerTrack: "",
+                options: [],
+            });
+        }
 
     }
 
     onStart(){
         this.generateAnswers("album");
         console.log("Started");
-        console.log("Points", this.state.points);
+
+        let ques = this.q[0][`${this.state.idx}`];
+
+        console.log("Points", this.q[0][`${this.state.idx}`]);
+
+
+        this.setState(({
+            currentQ: ques
+        }));
 
     }
 
 
     render() {
 
-        var question = this.q[0][1];
-       
 
         return (
             <div>
-                <button onClick={() => {this.onStart()}}>Begin</button>
+                <button className='begin' onClick={() => {this.onStart()}}>Begin</button>
+                <p>Points: {this.state.points}</p>
                 <div className='board'>
-                    <h1>{this.q[0]["1"].query}</h1>
+                    <h1>{this.state.currentQ ? this.state.currentQ.query : ""}</h1>
                     <h2 className='question'>{this.state.answerLabel}</h2>
                     <button className='btn' onClick={() => {this.handleClick(0)}}>{this.state.options[0]}</button>
                     <button className='btn' onClick={() => {this.handleClick(1)}}>{this.state.options[1]}</button>
