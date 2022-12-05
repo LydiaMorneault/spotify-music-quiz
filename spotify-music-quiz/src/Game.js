@@ -8,8 +8,8 @@ export class Question extends React.Component {
 
         this.q = JSON.parse(questions);
         this.keys = Object.keys(this.q[0]);
-        var songData;
-        var songkeys;
+        this.songData = {};
+        this.songkeys = [];
 
     }
 
@@ -43,9 +43,9 @@ export class Question extends React.Component {
 
 
     getRandomSong() {
-        var idx = Math.floor(Math.random() * this.songkeys.length);
-        var rankey = this.songkeys[idx];
-        return this.songData[0][rankey];
+        var len = Object.keys(this.songData).length;
+        var idx = Math.floor(Math.random() * len);
+        return this.songData[idx];
     }
 
 
@@ -55,8 +55,9 @@ export class Question extends React.Component {
         // get the answer
         let answer = this.getRandomSong();
 
+
         // get random songs, making sure that there are no repeats and the options are discrete
-        let songs = [answer.album.name];
+        let songs = [answer];
         let answers = [];
         let numSongs = 0;
 
@@ -64,14 +65,22 @@ export class Question extends React.Component {
         switch(ansType) {
             case "album":
                 answers.push(answer.album.name);
-                this.answer = answer.album.name;
+                this.setState({
+                    answerLabel: answer.album.name,
+                    answerTrack: answer.name
+                });
+                break;
             case "year":
                 answers.push(answer.album.release_date);
-                this.answer = answer.album.release_date;
+                this.setState({
+                    answerLabel: answer.album.release_date,
+                    answerTrack: answer.name
+                });
+                break;
         }
 
         // gets 4 total options for answers
-        while (numSongs < 4) {
+        while (numSongs < 3) {
             var song = this.getRandomSong();
             let checkAns;
             let songAns;
@@ -79,33 +88,37 @@ export class Question extends React.Component {
             switch(ansType) {
                 case "album":
                     checkAns = song.album.name;
+                    break;
                 case "year":
                     checkAns = song.album.release_date;
+                    break;
             }
 
             // make sure there are no duplicates
             if (!songs.includes(song) && !answers.includes(checkAns)) {
-                console.log(song);
                 songs.push(song);
                 answers.push(checkAns);
                 numSongs++;
             }
         }
 
-        this.setState({answerLabel: answer.name, options: this.shuffle(songs)});
+
+        this.setState({options: this.shuffle(answers)});
     }
 
 
     handleClick(idx) {
-        console.log(idx, this.state.options[idx], this.answer);
+        // console.log(idx, this.state.options[idx], this.state.answerLabel);
         let currPts;
 
-        if (this.state.options[idx] === this.answer) {
+        if (this.state.options[idx] === this.state.answerLabel) {
             currPts = this.state.points + 10;
+            console.log("CORRECT!");
         
             // TODO: make ding
         } else {
-            currPts = this.state.points - 10;     
+            currPts = this.state.points - 10; 
+            console.log("WRONG!");
             // TODO: make womp womp
         }
 
@@ -120,7 +133,7 @@ export class Question extends React.Component {
                 options: [],
                 currentQ: this.q[0][`${this.state.idx + 1}`]
             });
-            this.generateAnswers("album");
+            this.generateAnswers(this.q[0][this.state.idx+1].answerType);
         } else {
             this.setState({
                 points: currPts,
@@ -151,20 +164,13 @@ export class Question extends React.Component {
         .then((response) => response.json())
         .then((jsonsongData) => {
             this.songData=jsonsongData.items;
-            console.log(this.songData);
-            this.songData = JSON.parse(this.songData);
-            this.songkeys = Object.keys(this.songData[0]);
         })
         .catch(console.error);
 
         this.generateAnswers("album");
         console.log("Started");
-        console.log("Points", this.state.points);
 
         let ques = this.q[0][`${this.state.idx}`];
-
-        // console.log("Points", this.q[0][`${this.state.idx}`]);
-
 
         this.setState(({
             currentQ: ques
@@ -182,7 +188,7 @@ export class Question extends React.Component {
                 <p>Points: {this.state.points}</p>
                 <div className='board'>
                     <h1>{this.state.currentQ ? this.state.currentQ.query : ""}</h1>
-                    <h2 className='question'>{this.state.answerLabel}</h2>
+                    <h2 className='question'>{this.state.answerTrack}</h2>
                     <button className='btn' onClick={() => {this.handleClick(0)}}>{this.state.options[0]}</button>
                     <button className='btn' onClick={() => {this.handleClick(1)}}>{this.state.options[1]}</button>
                     <button className='btn' onClick={() => {this.handleClick(2)}}>{this.state.options[2]}</button>
