@@ -16,7 +16,7 @@ export const questions = `[{
     }
 }]`;
 
-export const data = `[{
+export var songData = `[{
 	"SuddenlyISee": {
 		"album": {
 			"id": "2up3OPMp9Tb4dAKM2erWXQ",
@@ -291,5 +291,4 @@ export const data = `[{
 		"path": "C:/Users/18607/Github/spotify-music-quiz/Downloads/TheWayIAre.mp3"
 	}
 }]`;
-
 

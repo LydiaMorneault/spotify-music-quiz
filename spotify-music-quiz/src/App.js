@@ -1,7 +1,13 @@
 import React, { Component } from 'react';
 import { Game } from './Game';
+import {Login} from './Login';
 // import './App.css';
-
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  redirect,
+} from "react-router-dom";
 
 
 class App extends Component {
@@ -23,12 +29,14 @@ class App extends Component {
 
   render() {
     return (
-      <div className='App'>
-        <header className='App-header'>
-          <h1>I'll Be Home for Quiz Mice</h1>
-        </header>
-        <Game />
-      </div>
+      
+      <Router>
+        <Routes>
+          <Route path="/" element={<Login/>} />      
+          <Route path="/game*" element={<Game/>}/>
+        </Routes>
+      </Router>
+      
     );
   }
 }
