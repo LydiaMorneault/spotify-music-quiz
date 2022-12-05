@@ -36,8 +36,8 @@ export class Login extends React.Component {
                 </header>
             </div>
 
-            <div>
-                <button onClick={() => {this.SignIn()}}>Sign in to Spotify</button>
+            <div className='loginBtn'>
+                <button className='button-3' onClick={() => {this.SignIn()}}>Sign in to Spotify</button>
             </div>
         </div>
         );
