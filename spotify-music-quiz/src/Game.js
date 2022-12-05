@@ -20,7 +20,8 @@ export class Question extends React.Component {
         answerTrack: "",
         options: [],
         points: 0,
-        currentQ: null
+        currentQ: null,
+        isPlaying: true
     }
 
     shuffle(array) { // source: https://stackoverflow.com/questions/2450954/how-to-randomize-shuffle-a-javascript-array
@@ -49,8 +50,9 @@ export class Question extends React.Component {
     }
 
 
-    generateAnswers(type) {
-        let ansType = type;
+    generateAnswers(type, qType) {
+        let answerClass = type;
+        let questionClass = qType;
 
         // get the answer
         let answer = this.getRandomSong();
@@ -61,20 +63,53 @@ export class Question extends React.Component {
         let answers = [];
         let numSongs = 0;
 
+        switch(questionClass) {
+            case "song":
+                this.setState({
+                    answerTrack: answer.name
+                });
+                break;
+            case "album":
+                this.setState({
+                    answerTrack: answer.album.name
+                });
+                break;
+            case "artist":
+                this.setState({
+                    answerTrack: answer.artists[0].name
+                });
+                break;
+            case "year":
+                this.setState({
+                    answerTrack: answer.album.release_date
+                });
+                break;
+        }
+
         // get value based on what's needed for the question
-        switch(ansType) {
+        switch(answerClass) {
             case "album":
                 answers.push(answer.album.name);
                 this.setState({
-                    answerLabel: answer.album.name,
-                    answerTrack: answer.name
+                    answerLabel: answer.album.name
                 });
                 break;
             case "year":
                 answers.push(answer.album.release_date);
                 this.setState({
-                    answerLabel: answer.album.release_date,
-                    answerTrack: answer.name
+                    answerLabel: answer.album.release_date
+                });
+                break;
+            case "artist":
+                answers.push(answer.artists[0].name);
+                this.setState({
+                    answerLabel: answer.artists[0].name
+                });
+                break;
+            case "song":
+                answers.push(answer.name);
+                this.setState({
+                    answerLabel: answer.name
                 });
                 break;
         }
@@ -85,12 +120,18 @@ export class Question extends React.Component {
             let checkAns;
             let songAns;
 
-            switch(ansType) {
+            switch(answerClass) {
                 case "album":
                     checkAns = song.album.name;
                     break;
                 case "year":
                     checkAns = song.album.release_date;
+                    break;
+                case "artist":
+                    checkAns = song.artists[0].name;
+                    break;
+                case "song":
+                    checkAns = song.name;
                     break;
             }
 
@@ -119,7 +160,7 @@ export class Question extends React.Component {
         } else {
             currPts = this.state.points - 10; 
             console.log("WRONG!");
-            // TODO: make womp womp
+            // TODO: make womp womp womp
         }
 
         // if there are no more questions, end game
@@ -133,16 +174,18 @@ export class Question extends React.Component {
                 options: [],
                 currentQ: this.q[0][`${this.state.idx + 1}`]
             });
-            this.generateAnswers(this.q[0][this.state.idx+1].answerType);
+            this.generateAnswers(this.q[0][this.state.idx+1].answerType, this.q[0][this.state.idx+1].display);
         } else {
             this.setState({
                 points: currPts,
                 idx: this.state.idx + 1,
-                question: "Game Over",
-                answerLabel: "",
-                answerTrack: "",
+                question: "",
+                answerLabel: "Game Over",
+                answerTrack: "Game Over",
                 options: [],
+                isPlaying: false
             });
+            this.getRandomSong();
         }
 
     }
@@ -167,7 +210,8 @@ export class Question extends React.Component {
         })
         .catch(console.error);
 
-        this.generateAnswers("album");
+        this.generateAnswers(this.q[0][this.state.idx].answerType, this.q[0][this.state.idx].display);
+
         console.log("Started");
 
         let ques = this.q[0][`${this.state.idx}`];
@@ -186,13 +230,17 @@ export class Question extends React.Component {
             <div>
                 <button className='begin' onClick={() => {this.onStart()}}>Begin</button>
                 <p>Points: {this.state.points}</p>
-                <div className='board'>
+                <div className='board' style={{visibility: this.state.isPlaying ? 'visible' : 'hidden'}}>
                     <h1>{this.state.currentQ ? this.state.currentQ.query : ""}</h1>
                     <h2 className='question'>{this.state.answerTrack}</h2>
+                    {/* <img src={this.songData[this.state.idx] ? this.songData[this.state.idx].album.images[0].url : ""}/> */}
                     <button className='btn' onClick={() => {this.handleClick(0)}}>{this.state.options[0]}</button>
                     <button className='btn' onClick={() => {this.handleClick(1)}}>{this.state.options[1]}</button>
                     <button className='btn' onClick={() => {this.handleClick(2)}}>{this.state.options[2]}</button>
                     <button className='btn' onClick={() => {this.handleClick(3)}}>{this.state.options[3]}</button>
+                </div>
+                <div style={{visibility: this.state.isPlaying ? 'hidden' : 'visible'}}>
+                    <h1>Final Score: {this.state.points}</h1>
                 </div>
             </div>
         );
