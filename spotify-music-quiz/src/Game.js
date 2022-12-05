@@ -1,11 +1,5 @@
 import React, { Component } from 'react';
 import { data, questions } from './quiz';
-import {
-    BrowserRouter as Router,
-    Switch,
-    Route,
-    Redirect,
-  } from "react-router-dom";
 
 export class Question extends React.Component {
     constructor(props) {
@@ -70,21 +64,28 @@ export class Question extends React.Component {
             case "album":
                 answers.push(answer.album.name);
                 this.answer = answer.album.name;
+            case "year":
+                answers.push(answer.album.release_date);
+                this.answer = answer.album.release_date;
         }
 
         // gets 4 total options for answers
         while (numSongs < 4) {
             var song = this.getRandomSong();
             let checkAns;
+            let songAns;
 
             switch(ansType) {
                 case "album":
                     checkAns = song.album.name;
+                case "year":
+                    checkAns = song.album.release_date;
             }
 
             // make sure there are no duplicates
             if (!songs.includes(song) && !answers.includes(checkAns)) {
-                songs.push(song.album.name);
+                console.log(song);
+                songs.push(song);
                 answers.push(checkAns);
                 numSongs++;
             }
@@ -138,7 +139,7 @@ export class Question extends React.Component {
 
         let ques = this.q[0][`${this.state.idx}`];
 
-        console.log("Points", this.q[0][`${this.state.idx}`]);
+        // console.log("Points", this.q[0][`${this.state.idx}`]);
 
 
         this.setState(({
