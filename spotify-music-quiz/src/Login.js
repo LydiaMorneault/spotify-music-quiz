@@ -7,7 +7,8 @@ import {
     redirect
   } from "react-router-dom";
 
-var client_id = 'c247a859f84d42f1bb843f6b8882b425'; // Your client id
+// var client_id = 'c247a859f84d42f1bb843f6b8882b425'; // Your client id
+var client_id = '5b47e9f22f754e0287e17a540eb1328d'; // Your client id
 var redirect_uri = 'http://localhost:3000/game'; // Your redirect uri
 
 // log in

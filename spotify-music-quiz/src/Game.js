@@ -142,15 +142,16 @@ export class Question extends React.Component {
 
         var placeholder;
 
-        fetch("https://api.spotify.com/v1/me/top/tracks" , {
+        fetch("https://api.spotify.com/v1/me/top/tracks/" , {
             headers: {
-                'Authorization': 'Bearer ' +  access_token
+                'Authorization': 'Bearer ' +  access_token,
+                'Content-Type': 'application/json'
             }
         })
         .then((response) => response.json())
         .then((jsonsongData) => {
             this.songData=jsonsongData.items;
-            console.log(this.songData[0].name);
+            console.log(this.songData);
             this.songData = JSON.parse(this.songData);
             this.songkeys = Object.keys(this.songData[0]);
         })
