@@ -292,46 +292,4 @@ export const data = `[{
 	}
 }]`;
 
-var load = function() {
-    var json = JSON.parse(data);
-    return json;
-}
-
-var getRandomSong = function(songs) {
-    // idx = Math.floor(Math.random() * Object.keys(songs[0]).length);
-    var keys = Object.keys(songs[0]);
-    var rankey = keys[Math.floor(Math.random() * keys.length)]
-    var song = songs[0][rankey];
-    return song;
-}
-
-var generateQuestion = function(songs) {
-
-    var answer = getRandomSong(songs);
-    var numSongs = 0;
-    var songArr = [answer];
-    while (numSongs < 3) {
-        var song = getRandomSong(songs);
-        if (!songArr.includes(song)) {
-            songArr.push(song);
-            numSongs++;
-        }
-    }
-
-    console.log(`What year did "${answer.name}" come out?`);
-    console.log(`A. ${songArr[0].album.release_date}`);
-    console.log(`B. ${songArr[1].album.release_date}`);
-    console.log(`C. ${songArr[2].album.release_date}`);
-    console.log(`D. ${songArr[3].album.release_date}`);
-}
-
-var songs = load();
-generateQuestion(songs);
-// define questions
-
-// create questions using songs
-
-// check that 
-
-
 
