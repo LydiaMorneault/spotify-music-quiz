@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import { data, questions } from './quiz';
+import { questions } from './quiz'
+
 
 export class Question extends React.Component {
     constructor(props) {
@@ -7,8 +8,8 @@ export class Question extends React.Component {
 
         this.q = JSON.parse(questions);
         this.keys = Object.keys(this.q[0]);
-        this.data = JSON.parse(data);
-        this.songkeys = Object.keys(this.data[0]);
+        var songData;
+        var songkeys;
 
     }
 
@@ -44,7 +45,7 @@ export class Question extends React.Component {
     getRandomSong() {
         var idx = Math.floor(Math.random() * this.songkeys.length);
         var rankey = this.songkeys[idx];
-        return this.data[0][rankey];
+        return this.songData[0][rankey];
     }
 
 
@@ -134,8 +135,30 @@ export class Question extends React.Component {
     }
 
     onStart(){
+        // pull URI songData, get songData from API
+
+        var params = new URLSearchParams(window.location.hash.replace('#',""));
+        var access_token = params.get('access_token');
+
+        var placeholder;
+
+        fetch("https://api.spotify.com/v1/me/top/tracks" , {
+            headers: {
+                'Authorization': 'Bearer ' +  access_token
+            }
+        })
+        .then((response) => response.json())
+        .then((jsonsongData) => {
+            this.songData=jsonsongData.items;
+            console.log(this.songData[0].name);
+            this.songData = JSON.parse(this.songData);
+            this.songkeys = Object.keys(this.songData[0]);
+        })
+        .catch(console.error);
+
         this.generateAnswers("album");
         console.log("Started");
+        console.log("Points", this.state.points);
 
         let ques = this.q[0][`${this.state.idx}`];
 
