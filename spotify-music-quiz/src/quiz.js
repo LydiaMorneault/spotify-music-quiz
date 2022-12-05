@@ -287,7 +287,7 @@ export var songData = `[{
 		}],
 		"id": "string",
 		"is_playable": true,
-		"name": "The Way I are",
+		"name": "The Way I Are",
 		"path": "C:/Users/18607/Github/spotify-music-quiz/Downloads/TheWayIAre.mp3"
 	}
 }]`;
