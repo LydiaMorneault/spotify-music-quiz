@@ -11,6 +11,9 @@ export class Question extends React.Component {
         this.songData = {};
         this.songkeys = [];
 
+        // set up audio
+        this.AudioContext = window.AudioContext || window.webkitAudioContext;
+        this.audioContext = new this.AudioContext();
     }
 
     state = {
@@ -21,7 +24,10 @@ export class Question extends React.Component {
         options: [],
         points: 0,
         currentQ: null,
-        isPlaying: true
+        isPlaying: true,
+        audio: process.env.PUBLIC_URL + 'correct.wav',
+        audioContext: null,
+        audioElement: null
     }
 
     shuffle(array) { // source: https://stackoverflow.com/questions/2450954/how-to-randomize-shuffle-a-javascript-array
@@ -152,11 +158,12 @@ export class Question extends React.Component {
         // console.log(idx, this.state.options[idx], this.state.answerLabel);
         let currPts;
 
+
         if (this.state.options[idx] === this.state.answerLabel) {
             currPts = this.state.points + 10;
             console.log("CORRECT!");
         
-            // TODO: make ding
+            this.state.audioElement.play();
         } else {
             currPts = this.state.points - 10; 
             console.log("WRONG!");
@@ -210,6 +217,14 @@ export class Question extends React.Component {
         })
         .catch(console.error);
 
+        // instantiate audio
+        this.setState({audioContext: this.audioContext});
+        const audioElement = document.querySelector('audio');
+        this.setState({audioElement:audioElement});
+        const track = this.audioContext.createMediaElementSource(this.state.audioElement);
+        track.connect(this.audioContext.destination);
+
+
         this.generateAnswers(this.q[0][this.state.idx].answerType, this.q[0][this.state.idx].display);
 
         console.log("Started");
@@ -225,19 +240,25 @@ export class Question extends React.Component {
 
     render() {
 
+        console.log(this.state);
 
         return (
-            <div>
-                <button className='begin' onClick={() => {this.onStart()}}>Begin</button>
-                <p>Points: {this.state.points}</p>
+            <div className='gameBoard'>
+                <div style={{visibility: this.state.isPlaying ? 'visible' : 'hidden'}}>
+                    <button className='button-3' onClick={() => {this.onStart()}}>Begin</button>
+                </div>
+                <h1>Points: {this.state.points}</h1>
+                <audio src={this.state.audio}></audio>
                 <div className='board' style={{visibility: this.state.isPlaying ? 'visible' : 'hidden'}}>
                     <h1>{this.state.currentQ ? this.state.currentQ.query : ""}</h1>
                     <h2 className='question'>{this.state.answerTrack}</h2>
                     {/* <img src={this.songData[this.state.idx] ? this.songData[this.state.idx].album.images[0].url : ""}/> */}
-                    <button className='btn' onClick={() => {this.handleClick(0)}}>{this.state.options[0]}</button>
-                    <button className='btn' onClick={() => {this.handleClick(1)}}>{this.state.options[1]}</button>
-                    <button className='btn' onClick={() => {this.handleClick(2)}}>{this.state.options[2]}</button>
-                    <button className='btn' onClick={() => {this.handleClick(3)}}>{this.state.options[3]}</button>
+                    <div className='btnContainer'>
+                        <button className='button-30' onClick={() => {this.handleClick(0)}}>{this.state.options[0]}</button>
+                        <button className='button-30' onClick={() => {this.handleClick(1)}}>{this.state.options[1]}</button>
+                        <button className='button-30' onClick={() => {this.handleClick(2)}}>{this.state.options[2]}</button>
+                        <button className='button-30' onClick={() => {this.handleClick(3)}}>{this.state.options[3]}</button>
+                    </div>
                 </div>
                 <div style={{visibility: this.state.isPlaying ? 'hidden' : 'visible'}}>
                     <h1>Final Score: {this.state.points}</h1>
@@ -245,7 +266,6 @@ export class Question extends React.Component {
             </div>
         );
     }
-    
 }
 
 export class Game extends React.Component {
