@@ -32,15 +32,24 @@
         <div id="login"></div>
     </div>
     <script type="text/javascript" src="../src/songs.json"></script>
-    <!--
-      This HTML file is a template.
-      If you open it directly in the browser, you will see an empty page.
-
-      You can add webfonts, meta tags, or analytics to this file.
-      The build step will place the bundled scripts into the <body> tag.
-
-      To begin the development, run `npm start` or `yarn start`.
-      To create a production bundle, use `npm run build` or `yarn build`.
-    -->
+    <script type="module">
+      // Import the functions you need from the SDKs you need
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/9.14.0/firebase-app.js";
+      // TODO: Add SDKs for Firebase products that you want to use
+      // https://firebase.google.com/docs/web/setup#available-libraries
+    
+      // Your web app's Firebase configuration
+      const firebaseConfig = {
+        apiKey: "AIzaSyAZt-jvIVZ0Yl6HF-DC3_eqsdF6YfabVDE",
+        authDomain: "spotify-music-quiz-ef69e.firebaseapp.com",
+        projectId: "spotify-music-quiz-ef69e",
+        storageBucket: "spotify-music-quiz-ef69e.appspot.com",
+        messagingSenderId: "479929467442",
+        appId: "1:479929467442:web:2fe2222a7a2c0a6039b22b"
+      };
+    
+      // Initialize Firebase
+      const app = initializeApp(firebaseConfig);
+    </script>
   </body>
 </html>
